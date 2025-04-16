@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+
 void    *routine(void *argim)
 {
     int id;

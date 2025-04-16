@@ -6,7 +6,7 @@
 /*   By: yasserlotfi <yasserlotfi@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:33 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/13 10:29:36 by yasserlotfi      ###   ########.fr       */
+/*   Updated: 2025/04/15 11:24:41 by yasserlotfi      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <pthread.h>
+typedef struct s_args t_args;
 typedef struct s_philo t_philo;
-typedef struct s_args
-{
-	int	philos_nb;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	eat_times;
-	t_philo philo[200];
-}	t_args;
-
 typedef struct s_philo
 {
 	int				id;
@@ -40,10 +31,22 @@ typedef struct s_philo
 	t_args	*args;
 }	t_philo;
 
+typedef struct s_args
+{
+	int	philos_nb;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	eat_times;
+	t_philo philo[200];
+}	t_args;
+
+
 int			ft_atoi(char *str);
 long long	get_time(void);
-int			args_parsing(char **av, t_args *args);
+void		args_parsing(char **av, t_args *args);
 void		error(t_args *args);
 void		thread_creation(t_args *args);
-void		*routine(t_philo *philo);
+void		*routine(void *args);
+void		*monitoring(void *arg);
 #endif

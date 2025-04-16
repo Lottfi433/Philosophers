@@ -1,0 +1,58 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yasserlotfi <yasserlotfi@student.42.fr>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/14 12:49:59 by yasserlotfi       #+#    #+#             */
+/*   Updated: 2025/04/16 10:50:03 by yasserlotfi      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philo.h"
+
+int	ft_atoi(char *str)
+{
+	int	i;
+	int	r;
+	int	s;
+
+	i = 0;
+	r = 0;
+	s = 1;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			s = -1;
+		i++;
+	}
+	while (str[i] != '\0')
+	{
+		if ((str[i] < '0' || str[i] > '9') || s < 0)
+			return (0);
+		r = r * 10 + (str[i] - 48);
+		i++;
+	}
+	return (r * s);
+}
+
+void	error(t_args *args)
+{
+	write(1, "Error in args\n", 14);
+	if (args != NULL)
+		free (args);
+	exit(0);
+}
+
+long long	get_time(void)
+{
+	struct timeval	tv;
+	long long		ms;
+
+	gettimeofday(&tv, NULL);
+	ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return (ms);
+}
