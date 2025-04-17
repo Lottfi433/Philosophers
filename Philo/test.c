@@ -1,37 +1,38 @@
 #include <pthread.h>
 #include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 
+#define NUM_THREADS 10
+#define INCREMENTS_PER_THREAD 100000
 
-void    *routine(void *argim)
+int counter = 0;  // Shared variable
+
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+void *increment(void *arg)
 {
-    int id;
-
-    id = *(int *)argim;
-    
-    printf("thread id %d is working!\n", id);
-    return (NULL);
-}
-void    *routine2(void *argim)
-{
-    int id;
-
-    sleep(3);
-    id = *(int *)argim;
-    sleep(3);
-    printf("thread id %d is working!\n", id);
-    return (NULL);
+    for (int i = 0; i < INCREMENTS_PER_THREAD; i++)
+    {
+        pthread_mutex_lock(&lock);
+        counter++;  // Not protected — race condition!
+        pthread_mutex_unlock(&lock);
+    }
+    return NULL;
 }
 
-int main ()
+int main()
 {
-    pthread_t   t1;
-    pthread_t   t2;
-    int id1, id2;
-    id1 = 1;
-    id2 = 2;
-    pthread_create(&t1, NULL, &routine, &id1);
-    pthread_create(&t2, NULL, &routine2, &id2);
-    pthread_join(t1, NULL);
-    printf("main done execution");
+    pthread_t threads[NUM_THREADS];
+
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        pthread_create(&threads[i], NULL, increment, NULL);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        pthread_join(threads[i], NULL);
+    }
+
+    printf("Final counter value: %d\n", counter);
+    return 0;
 }

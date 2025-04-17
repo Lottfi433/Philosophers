@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yasserlotfi <yasserlotfi@student.42.fr>    +#+  +:+       +#+        */
+/*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:19 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/16 12:46:27 by yasserlotfi      ###   ########.fr       */
+/*   Updated: 2025/04/17 11:07:31 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,9 @@
 void	philo_int(t_args *args)
 {
 	int				i;
-	pthread_mutex_t	*forks;
+	pthread_mutex_t	forks[200];
 
 	i = 0;
-	forks = malloc (args->philos_nb * sizeof(pthread_mutex_t));
-	if (!forks)
-		error(args);
 	while (i < args->philos_nb)
 	{
 		pthread_mutex_init(&forks[i], NULL);
@@ -68,20 +65,28 @@ void	*monitoring(void *arg)
 {
 	t_args	*args;
 	int		i;
+	int		full_philos;
 
+	full_philos = 0;
 	args = (t_args *)arg;
 	while (1)
 	{
 		i = 0;
 		while (i < args->philos_nb)
 		{
+			pthread_mutex_lock(&args->philo[i].meals_lock);
 			if (get_time() - args->philo[i].last_meal > args->time_to_die)
 			{
 				printf("%lld %d died\n", get_time(), args->philo[i].id);
 				exit(0);
 			}
+			if (args->philo[i].meals >= args->eat_times)
+				full_philos++;
+			pthread_mutex_unlock(&args->philo[i].meals_lock);
 			i++;
 		}
+		if (full_philos == args->philos_nb)
+			exit(0);
 		usleep(1000);
 	}
 	return (NULL);
