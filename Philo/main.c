@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yasserlotfi <yasserlotfi@student.42.fr>    +#+  +:+       +#+        */
+/*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:51 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/16 09:16:34 by yasserlotfi      ###   ########.fr       */
+/*   Updated: 2025/04/19 13:02:18 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	args_parsing(char **av, t_args *args)
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
 	args->eat_times = ft_atoi(av[5]);
+	args->start_time = get_time();
+	args->dead = 1;
 }
 
 void main_helper(t_args *args, char **av)

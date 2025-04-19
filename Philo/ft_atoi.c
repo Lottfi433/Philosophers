@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yasserlotfi <yasserlotfi@student.42.fr>    +#+  +:+       +#+        */
+/*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 12:49:59 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/16 10:50:03 by yasserlotfi      ###   ########.fr       */
+/*   Updated: 2025/04/19 11:38:44 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ void	error(t_args *args)
 	exit(0);
 }
 
-long long	get_time(void)
+size_t	get_time(void)
 {
 	struct timeval	tv;
-	long long		ms;
+	size_t			ms;
 
 	gettimeofday(&tv, NULL);
 	ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
