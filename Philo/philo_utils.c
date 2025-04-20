@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:19 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/19 12:56:34 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/20 13:15:52 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,33 @@ int	death(t_args *args)
 	pthread_mutex_unlock(&args->dead_lock);
 	return (x);
 }
+
+void	routine_helper(t_philo	*philo)
+{
+	int	i;
+
+	i = 0;
+	if (philo->args->eat_times != 0)
+	{
+		while (death(philo->args) && i < philo->args->eat_times)
+		{
+			eating(philo);
+			sleeping(philo);
+			print_action(philo, "is thinking");
+			i++;
+		}
+	}
+	else
+	{
+		while (death(philo->args))
+		{
+			eating(philo);
+			sleeping(philo);
+			print_action(philo, "is thinking");
+		}
+	}
+}
+
 void *routine(void *arg)
 {
 	t_philo *philo;
@@ -54,16 +81,12 @@ void *routine(void *arg)
 	if (philo->args->philos_nb == 1)
 	{
 		printf("%lu %d Takes left Fork\n", get_time() - philo->args->start_time, philo->id);
-		usleep(philo->args->time_to_die);
-		printf("%lu %d Died\n", get_time() - philo->args->start_time, philo->id);
+		my_sleep(philo->args->time_to_die);
 		return (NULL);
 	}
-	while (death(philo->args))
-	{
-		eating(philo);
-		sleeping(philo);
-		print_action(philo, "is thinking");
-	}
+	if (philo->id % 2 == 0)
+		usleep(100);
+	routine_helper(philo);
 	return (NULL);
 }
 
@@ -83,14 +106,14 @@ void	*monitoring(void *arg)
 			pthread_mutex_lock(&args->philo[i].meals_lock);
 			if ((get_time() - args->philo[i].last_meal) >= args->time_to_die)
 			{
-				pthread_mutex_unlock(&args->philo[i].meals_lock);
+				printf("%zu %d died\n", (get_time() - args->start_time), args->philo[i].id);
 				pthread_mutex_lock(&args->dead_lock);
 				args->dead = 0;
 				pthread_mutex_unlock(&args->dead_lock);
-				printf("%zu %d died\n", (get_time() - args->start_time), args->philo[i].id);
-				break ;
+				pthread_mutex_unlock(&args->philo[i].meals_lock);
+				return (NULL);
 			}
-			if (args->philo[i].meals >= args->eat_times)
+			if (args->eat_times > 0 && args->philo[i].meals >= args->eat_times)
 				full_philos++;
 			pthread_mutex_unlock(&args->philo[i].meals_lock);
 			i++;

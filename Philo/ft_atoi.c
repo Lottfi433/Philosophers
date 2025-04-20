@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 12:49:59 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/19 11:38:44 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/20 13:15:18 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	ft_atoi(char *str)
 	i = 0;
 	r = 0;
 	s = 1;
+	if (str == NULL)
+		return (0);
 	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	if (str[i] == '-' || str[i] == '+')
@@ -31,8 +33,6 @@ int	ft_atoi(char *str)
 	}
 	while (str[i] != '\0')
 	{
-		if ((str[i] < '0' || str[i] > '9') || s < 0)
-			return (0);
 		r = r * 10 + (str[i] - 48);
 		i++;
 	}
@@ -55,4 +55,13 @@ size_t	get_time(void)
 	gettimeofday(&tv, NULL);
 	ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	return (ms);
+}
+
+void	my_sleep(size_t duration_ms)
+{
+	size_t	start;
+
+	start = get_time();
+	while ((get_time() - start) < duration_ms)
+		usleep(100);
 }

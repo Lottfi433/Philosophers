@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 09:56:52 by yazlaigi          #+#    #+#             */
-/*   Updated: 2025/04/19 12:52:29 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/20 13:16:28 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	death_check(t_philo *philo)
 {
-	if (get_time() - philo->last_meal > philo->args->time_to_die)
+	if ((get_time() - philo->last_meal) > philo->args->time_to_die)
 	{
 		pthread_mutex_lock(&philo->args->dead_lock);
 		if (philo->args->dead == 1)
@@ -43,7 +43,7 @@ void	print_action(t_philo *philo, char *msg)
 void	sleeping(t_philo *philo)
 {
 	print_action(philo, "is sleeping");
-	usleep(philo->args->time_to_sleep * 1000);
+	my_sleep(philo->args->time_to_sleep);
 }
 
 void	eating(t_philo *philo)
@@ -54,10 +54,10 @@ void	eating(t_philo *philo)
 	print_action(philo, "has taken a fork");
 	print_action(philo, "is eating");
 	pthread_mutex_lock(&philo->meals_lock);
-	philo->last_meal = get_time() - philo->args->start_time;
+	my_sleep(philo->args->time_to_eat);
+	philo->last_meal = get_time();
 	philo->meals++;
 	pthread_mutex_unlock(&philo->meals_lock);
-	usleep(philo->args->time_to_eat * 1000);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
 }

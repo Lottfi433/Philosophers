@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:51 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/19 13:02:18 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/20 13:26:56 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	args_parsing(char **av, t_args *args)
 void main_helper(t_args *args, char **av)
 {
 	 if(ft_atoi(av[1]) <= 0 || ft_atoi(av[2]) <= 0 || ft_atoi(av[3]) <= 0
-		|| ft_atoi(av[4]) <= 0 || ft_atoi(av[5]) <= 0)
+		|| ft_atoi(av[4]) <= 0 || ft_atoi(av[5]) < 0)
 		error(args);
 }
 int	main(int ac, char **av)
@@ -36,7 +36,7 @@ int	main(int ac, char **av)
 	args = malloc (sizeof(t_args));
 	if (args == NULL)
 		error(args);
-	if (ac == 6)
+	if (ac == 6 || ac == 5)
 	{
 
 		args_parsing(av, args);
