@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:33 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/20 12:55:02 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/22 12:10:46 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <pthread.h>
-typedef struct s_args t_args;
-typedef struct s_philo t_philo;
+
+typedef struct s_args	t_args;
+
+typedef struct s_philo	t_philo;
 typedef struct s_philo
 {
 	int				id;
@@ -41,10 +43,10 @@ typedef struct s_args
 	int				time_to_sleep;
 	int				eat_times;
 	int				dead;
-	pthread_mutex_t print_m;
-	pthread_mutex_t dead_lock;
+	pthread_mutex_t	print_m;
+	pthread_mutex_t	dead_lock;
 	pthread_mutex_t	forks[200];
-	t_philo philo[200];
+	t_philo			philo[200];
 }	t_args;
 
 int		death(t_args *args);
@@ -60,4 +62,6 @@ void	eating(t_philo *philo);
 int		death_check(t_philo *philo);
 void	sleeping(t_philo *philo);
 void	my_sleep(size_t duration_ms);
+void	philo_int(t_args *args);
+void	monitoring_helper(t_args *args, int i);
 #endif

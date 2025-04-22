@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 12:49:59 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/20 13:15:18 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:28:00 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	ft_atoi(char *str)
 	}
 	while (str[i] != '\0')
 	{
+		if (str[i] < '0' || str[i] > '9')
+			return (-1);
 		r = r * 10 + (str[i] - 48);
 		i++;
 	}
@@ -63,5 +65,5 @@ void	my_sleep(size_t duration_ms)
 
 	start = get_time();
 	while ((get_time() - start) < duration_ms)
-		usleep(100);
+		usleep(50);
 }

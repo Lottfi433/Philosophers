@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:19 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/20 13:15:52 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:02:01 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	philo_int(t_args *args)
 {
 	int				i;
-
 
 	i = 0;
 	while (i < args->philos_nb)
@@ -37,20 +36,10 @@ void	philo_int(t_args *args)
 	}
 }
 
-int	death(t_args *args)
-{
-	int	x;
-
-	pthread_mutex_lock(&args->dead_lock);
-	x = args->dead;
-	pthread_mutex_unlock(&args->dead_lock);
-	return (x);
-}
-
 void	routine_helper(t_philo	*philo)
 {
 	int	i;
-
+	
 	i = 0;
 	if (philo->args->eat_times != 0)
 	{
@@ -73,27 +62,41 @@ void	routine_helper(t_philo	*philo)
 	}
 }
 
-void *routine(void *arg)
+void	*routine(void *arg)
 {
-	t_philo *philo;
+	t_philo	*philo;
+	size_t	time;
 
 	philo = (t_philo *)arg;
 	if (philo->args->philos_nb == 1)
 	{
-		printf("%lu %d Takes left Fork\n", get_time() - philo->args->start_time, philo->id);
+		time = get_time() - philo->args->start_time;
+		printf("%lu %d Takes left Fork\n", time, philo->id);
 		my_sleep(philo->args->time_to_die);
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		usleep(100);
+		usleep(1000);
 	routine_helper(philo);
 	return (NULL);
 }
 
+void	monitoring_helper(t_args *args, int i)
+{
+	size_t	x;
+
+	x = get_time() - args->start_time;
+	printf("%zu %d died\n", x, args->philo[i].id);
+	pthread_mutex_lock(&args->dead_lock);
+	args->dead = 0;
+	pthread_mutex_unlock(&args->dead_lock);
+}
+
 void	*monitoring(void *arg)
 {
-	t_args	*args;
-	int		i;
+	t_args		*args;
+	int			i;
+	size_t		x;
 	int		full_philos;
 
 	args = (t_args *)arg;
@@ -104,12 +107,10 @@ void	*monitoring(void *arg)
 		while (i < args->philos_nb)
 		{
 			pthread_mutex_lock(&args->philo[i].meals_lock);
-			if ((get_time() - args->philo[i].last_meal) >= args->time_to_die)
+			x = get_time() - args->philo[i].last_meal;
+			if (x >= args->time_to_die)
 			{
-				printf("%zu %d died\n", (get_time() - args->start_time), args->philo[i].id);
-				pthread_mutex_lock(&args->dead_lock);
-				args->dead = 0;
-				pthread_mutex_unlock(&args->dead_lock);
+				monitoring_helper(args, i);
 				pthread_mutex_unlock(&args->philo[i].meals_lock);
 				return (NULL);
 			}
@@ -122,28 +123,4 @@ void	*monitoring(void *arg)
 			return (NULL);
 	}
 	return (NULL);
-}
-
-void	thread_creation(t_args *args)
-{
-	int i = 0;
-	pthread_t	monit;
-
-	philo_int(args);
-	while (i < args->philos_nb)
-	{
-		if (pthread_create(&args->philo[i].thread, NULL, &routine, &args->philo[i]) != 0)
-			error(args);
-		usleep(100);
-		i++;
-	}
-	if (pthread_create(&monit, NULL, &monitoring, args) != 0)
-		error(args);
-	i = 0;
-	while (i < args->philos_nb)
-	{
-		pthread_join(args->philo[i].thread, NULL);
-		i++;
-	}
-	pthread_join(monit, NULL);
 }
