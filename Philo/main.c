@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:51 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/22 10:27:54 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:34:16 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,32 @@ void	thread_creation(t_args *args)
 		i++;
 	}
 	pthread_join(monit, NULL);
+}
+
+void	philo_int(t_args *args)
+{
+	int				i;
+
+	i = 0;
+	while (i < args->philos_nb)
+	{
+		pthread_mutex_init(&args->forks[i], NULL);
+		i++;
+	}
+	pthread_mutex_init(&args->print_m, NULL);
+	pthread_mutex_init(&args->dead_lock, NULL);
+	i = 0;
+	while (i < args->philos_nb)
+	{
+		args->philo[i].id = i + 1;
+		args->philo[i].last_meal = get_time();
+		args->philo[i].meals = 0;
+		args->philo[i].args = args;
+		args->philo[i].left_fork = &args->forks[i];
+		args->philo[i].right_fork = &args->forks[(i + 1) % args->philos_nb];
+		pthread_mutex_init(&args->philo[i].meals_lock, NULL);
+		i++;
+	}
 }
 
 void	args_parsing(char **av, t_args *args)

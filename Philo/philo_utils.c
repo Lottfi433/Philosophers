@@ -6,40 +6,16 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:19 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/22 13:02:01 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:55:13 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	philo_int(t_args *args)
-{
-	int				i;
-
-	i = 0;
-	while (i < args->philos_nb)
-	{
-		pthread_mutex_init(&args->forks[i], NULL);
-		i++;
-	}
-	pthread_mutex_init(&args->print_m, NULL);
-	i = 0;
-	while (i < args->philos_nb)
-	{
-		args->philo[i].id = i + 1;
-		args->philo[i].last_meal = get_time();
-		args->philo[i].meals = 0;
-		args->philo[i].args = args;
-		args->philo[i].left_fork = &args->forks[i];
-		args->philo[i].right_fork = &args->forks[(i + 1) % args->philos_nb];
-		i++;
-	}
-}
-
 void	routine_helper(t_philo	*philo)
 {
 	int	i;
-	
+
 	i = 0;
 	if (philo->args->eat_times != 0)
 	{
@@ -90,13 +66,13 @@ void	monitoring_helper(t_args *args, int i)
 	pthread_mutex_lock(&args->dead_lock);
 	args->dead = 0;
 	pthread_mutex_unlock(&args->dead_lock);
+	pthread_mutex_unlock(&args->philo[i].meals_lock);
 }
 
 void	*monitoring(void *arg)
 {
-	t_args		*args;
-	int			i;
-	size_t		x;
+	t_args	*args;
+	int		i;
 	int		full_philos;
 
 	args = (t_args *)arg;
@@ -107,13 +83,8 @@ void	*monitoring(void *arg)
 		while (i < args->philos_nb)
 		{
 			pthread_mutex_lock(&args->philo[i].meals_lock);
-			x = get_time() - args->philo[i].last_meal;
-			if (x >= args->time_to_die)
-			{
-				monitoring_helper(args, i);
-				pthread_mutex_unlock(&args->philo[i].meals_lock);
-				return (NULL);
-			}
+			if (get_time() - args->philo[i].last_meal >= args->time_to_die)
+				return (monitoring_helper(args, i), NULL);
 			if (args->eat_times > 0 && args->philo[i].meals >= args->eat_times)
 				full_philos++;
 			pthread_mutex_unlock(&args->philo[i].meals_lock);

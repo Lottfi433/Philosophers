@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:33 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/22 12:10:46 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:47:42 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,5 @@ void	sleeping(t_philo *philo);
 void	my_sleep(size_t duration_ms);
 void	philo_int(t_args *args);
 void	monitoring_helper(t_args *args, int i);
+void	*monitoring_helper2(t_args *args, int i, size_t x, int full_philos);
 #endif
