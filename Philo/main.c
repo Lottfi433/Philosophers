@@ -6,13 +6,13 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:51 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/23 09:34:16 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:59:44 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	thread_creation(t_args *args)
+int	thread_creation(t_args *args)
 {
 	int			i;
 	pthread_t	monit;
@@ -24,11 +24,11 @@ void	thread_creation(t_args *args)
 	{
 		w = &args->philo[i].thread;
 		if (pthread_create(w, NULL, &routine, &args->philo[i]) != 0)
-			error(args);
+			return (0);
 		i++;
 	}
 	if (pthread_create(&monit, NULL, &monitoring, args) != 0)
-		error(args);
+		return (0);
 	i = 0;
 	while (i < args->philos_nb)
 	{
@@ -36,6 +36,7 @@ void	thread_creation(t_args *args)
 		i++;
 	}
 	pthread_join(monit, NULL);
+	return (1);
 }
 
 void	philo_int(t_args *args)
@@ -75,11 +76,20 @@ void	args_parsing(char **av, t_args *args)
 	args->dead = 1;
 }
 
-void	main_helper(t_args *args, char **av)
+int	main_helper(char **av)
 {
 	if (ft_atoi(av[1]) <= 0 || ft_atoi(av[2]) <= 0 || ft_atoi(av[3]) <= 0
-		|| ft_atoi(av[4]) <= 0 || ft_atoi(av[5]) < 0)
-		error(args);
+		|| ft_atoi(av[4]) <= 0)
+	{
+		printf("Number is not valide\n");
+		return (0);
+	}
+	if (ft_atoi(av[5]) <= 0 && av[5] != NULL)
+	{
+		printf("Number is not valide\n");
+		return (0);
+	}
+	return (1);
 }
 
 int	main(int ac, char **av)
@@ -88,13 +98,21 @@ int	main(int ac, char **av)
 
 	args = malloc (sizeof(t_args));
 	if (args == NULL)
-		error(args);
+	{
+		printf("Error\n");
+		return (0);
+	}
 	if (ac == 6 || ac == 5)
 	{
 		args_parsing(av, args);
-		main_helper(args, av);
-		thread_creation(args);
+		if (main_helper(av) == 0)
+			return (0);
+		if (thread_creation(args) == 0)
+			return (0);
 	}
 	else
 		write(2, "bad usage!", 10);
+	free(args);
+	args = NULL;
+	return (0);
 }

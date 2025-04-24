@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:19 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/23 09:55:13 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:17:08 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ void	*routine(void *arg)
 	if (philo->args->philos_nb == 1)
 	{
 		time = get_time() - philo->args->start_time;
-		printf("%lu %d Takes left Fork\n", time, philo->id);
+		pthread_mutex_lock(philo->left_fork);
+		printf("%lu %d takes left Fork\n", time, philo->id);
+		pthread_mutex_unlock(philo->left_fork);
 		my_sleep(philo->args->time_to_die);
 		return (NULL);
 	}
@@ -62,8 +64,8 @@ void	monitoring_helper(t_args *args, int i)
 	size_t	x;
 
 	x = get_time() - args->start_time;
-	printf("%zu %d died\n", x, args->philo[i].id);
 	pthread_mutex_lock(&args->dead_lock);
+	printf("%zu %d died\n", x, args->philo[i].id);
 	args->dead = 0;
 	pthread_mutex_unlock(&args->dead_lock);
 	pthread_mutex_unlock(&args->philo[i].meals_lock);

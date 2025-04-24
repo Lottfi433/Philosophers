@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 12:49:59 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/22 10:28:00 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:49:35 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,6 @@ int	ft_atoi(char *str)
 	return (r * s);
 }
 
-void	error(t_args *args)
-{
-	write(1, "Error in args\n", 14);
-	if (args != NULL)
-		free (args);
-	exit(0);
-}
-
 size_t	get_time(void)
 {
 	struct timeval	tv;
@@ -65,5 +57,7 @@ void	my_sleep(size_t duration_ms)
 
 	start = get_time();
 	while ((get_time() - start) < duration_ms)
+	{
 		usleep(50);
+	}
 }

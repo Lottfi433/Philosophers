@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:33 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/23 09:47:42 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:34:48 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ int		death(t_args *args);
 int		ft_atoi(char *str);
 size_t	get_time(void);
 void	args_parsing(char **av, t_args *args);
-void	error(t_args *args);
-void	thread_creation(t_args *args);
+int		thread_creation(t_args *args);
 void	*routine(void *args);
 void	*monitoring(void *arg);
 void	print_action(t_philo *philo, char *msg);
