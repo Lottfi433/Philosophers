@@ -6,7 +6,7 @@
 /*   By: yazlaigi <yazlaigi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 10:02:51 by yasserlotfi       #+#    #+#             */
-/*   Updated: 2025/04/24 10:59:44 by yazlaigi         ###   ########.fr       */
+/*   Updated: 2025/05/06 09:25:48 by yazlaigi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,15 @@ int	main_helper(char **av)
 	return (1);
 }
 
+void ll()
+{
+	system("leaks philo");
+}
 int	main(int ac, char **av)
 {
 	t_args	*args;
 
+	atexit(ll);
 	args = malloc (sizeof(t_args));
 	if (args == NULL)
 	{
